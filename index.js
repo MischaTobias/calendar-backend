@@ -1,6 +1,9 @@
 const express = require("express");
+const { dbConnection } = require("./database/config");
 
 const app = express();
+
+dbConnection();
 
 const PORT = process.env.PORT;
 
