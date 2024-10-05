@@ -1,5 +1,8 @@
 const { response } = require("express");
-const User = require("../database/models/User");
+const bcrypt = require("bcryptjs");
+
+const User = require("../models/user");
+const { generateToken } = require("../helpers/jwt");
 
 const createUser = async (req, res = response) => {
   try {
@@ -14,15 +17,23 @@ const createUser = async (req, res = response) => {
     }
 
     user = new User({ ...req.body });
+
+    // encrypt password
+    const salt = await bcrypt.genSalt();
+    user.password = await bcrypt.hash(user.password, salt);
+
     await user.save();
+
+    // generate token
+    const token = await generateToken(user.id, user.name);
 
     const { id, name } = user;
 
     return res.status(201).json({
       ok: true,
-      msg: "Register",
-      id,
+      uid: id,
       name,
+      token,
     });
   } catch (error) {
     console.log(error);
@@ -33,22 +44,60 @@ const createUser = async (req, res = response) => {
   }
 };
 
-const revalidateToken = (req, res) => {
+const revalidateToken = async (req, res = response) => {
+  const { uid, name } = req;
+
+  const token = await generateToken(uid, name);
+
   return res.json({
     ok: true,
-    msg: "Token renewed",
+    uid,
+    name,
+    token,
   });
 };
 
-const userLogin = (req, res = response) => {
-  const { email, password } = req.body;
+const userLogin = async (req, res = response) => {
+  try {
+    const { email, password } = req.body;
 
-  return res.status(200).json({
-    ok: true,
-    msg: "Login",
-    email,
-    password,
-  });
+    let user = await User.findOne({ email });
+
+    const msg = "Email or password is incorrect";
+
+    if (!user) {
+      return res.status(400).json({
+        ok: false,
+        msg,
+      });
+    }
+
+    // check password
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordCorrect) {
+      return res.status(400).json({
+        ok: false,
+        msg,
+      });
+    }
+
+    // generate token
+    const token = await generateToken(user.id, user.name);
+
+    return res.status(200).json({
+      ok: true,
+      uid: user.id,
+      name: user.name,
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Please contact the admin",
+    });
+  }
 };
 
 module.exports = {

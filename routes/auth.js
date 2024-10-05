@@ -13,10 +13,11 @@ const {
   userLogin,
 } = require("../controllers/auth");
 const { validateFields } = require("../middlewares/fields-validator");
+const { validateJWT } = require("../middlewares/validate-jwt");
 
 // ROUTES
 
-router.get("/renewToken", revalidateToken);
+router.get("/renew", validateJWT, revalidateToken);
 
 router.post(
   "/login",
