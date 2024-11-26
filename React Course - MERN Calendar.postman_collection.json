@@ -1,0 +1,351 @@
+{
+	"info": {
+		"_postman_id": "7fd3c3df-7cf8-45e9-8fb4-a826abcc7bf5",
+		"name": "React Course - MERN Calendar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12458680"
+	},
+	"item": [
+		{
+			"name": "Frontend",
+			"item": [
+				{
+					"name": "Get Gif",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.giphy.com/v1/gifs/search?api_key=mmIRAOHh3AaUBkbFRhZpDBgym0JvlRAL&q=Valorant&limit=20",
+							"host": [
+								"api",
+								"giphy",
+								"com"
+							],
+							"path": [
+								"v1",
+								"gifs",
+								"search"
+							],
+							"query": [
+								{
+									"key": "api_key",
+									"value": "mmIRAOHh3AaUBkbFRhZpDBgym0JvlRAL"
+								},
+								{
+									"key": "q",
+									"value": "Valorant"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload image to cloudinary",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/private/var/folders/f2/9knzlwf97ylch6qbxp1lf8cw0000gn/T/com.apple.Photos.NSItemProvider/uuid=B15A915F-A333-432D-BA82-A5B5DC603F45&code=001&library=1&type=1&mode=2&loc=true&cap=true.jpeg/IMG_4355.jpeg"
+								},
+								{
+									"key": "upload_preset",
+									"value": "react-journal",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.cloudinary.com/v1_1/maavtomo-projects/upload",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudinary",
+								"com"
+							],
+							"path": [
+								"v1_1",
+								"maavtomo-projects",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Backend",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Renew",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/auth/renewToken",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"auth",
+										"renewToken"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"mish@gmail.com\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{calendar_api}}/api/auth/login",
+									"host": [
+										"{{calendar_api}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Revalidate JWT",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-token",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"mish@gmail.com\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/auth/renew",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"auth",
+										"renew"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Mischa\",\n    \"email\": \"mish@gmail.com\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/auth/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Events",
+					"item": [
+						{
+							"name": "Create Event",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-token",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"first event\",\n    \"notes\": \"events notes\",\n    \"start\": \"2024-10-25T21:11:18\",\n    \"end\": \"2024-10-26T21:11:18\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/events",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Event",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "x-token",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"first event update\",\n    \"notes\": \"events notes update againnnn\",\n    \"start\": \"2024-10-25T21:11:18\",\n    \"end\": \"2024-10-26T21:11:18\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/events/67456eaf67d5314fffe9367d",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"events",
+										"67456eaf67d5314fffe9367d"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Event",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-token",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/events/67456eaf67d5314fffe9367d",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"events",
+										"67456eaf67d5314fffe9367d"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Events",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-token",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/events",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

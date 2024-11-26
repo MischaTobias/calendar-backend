@@ -9,9 +9,9 @@ This is a Mongo, Express, and Node.js backend which purpose is to provide inform
 
 # Requests
 
-The site is hosted on Railway:
+The site is hosted on Railway, and can be tested with the Backend folder in the postman collection in this repo:
 
-- Railway: NA
+- Railway URL: mern-calendar-backend-mt.up.railway.app
 
 # Built with
 
