@@ -11,21 +11,18 @@ app.use(cors());
 
 const PORT = process.env.PORT;
 
-app.use((req, res, next) => {
-  console.log(`Handling request: ${req.url}`);
-  next();
-});
+// Directorio Público
+app.use(express.static("public"));
 
-// Serve static files from the "public" folder
-app.use(express.static(path.join(__dirname, "public")));
+// Lectura y parseo del body
+app.use(express.json());
 
-// API routes
+// Rutas
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/events", require("./routes/events"));
 
-// Fallback route for React SPA
-app.get(/^\/(?!assets\/).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+app.use("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
 app.listen(PORT, () => {
